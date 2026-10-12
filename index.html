@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabella - Makeup & Skincare</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --fondo:#fdfbfb;
+        --rosa-bebe:#ffe5ec;
+        --rosa-activo:#ffb3c6;
+        --rojo-pastel:#ff4d6d;
+        --rojo-oscuro:#c9184a;
+        --texto:#590d22;
+        --blanco:#ffffff;
+        --negro:#1a1a1a;
+        --gris-borde:#ececec;
+        --gris-suave:#f7f5f5;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{
+        background-color:var(--fondo);
+        color:var(--texto);
+        padding-bottom:90px;
+        overflow-x:hidden;
+    }
+
+    /* HEADER */
+    .topbar{
+        background-color:var(--fondo);
+        padding:14px 24px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        border-bottom:1px solid var(--gris-borde);
+        position:sticky;
+        top:0;
+        z-index:100;
+    }
+    .header-left{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        min-width:0;
+        flex-shrink:0;
+    }
+    .header-logo{
+        width:52px;
+        height:52px;
+        object-fit:cover;
+        border-radius:50%;
+        flex-shrink:0;
+        border:2px solid var(--rosa-bebe);
+        box-shadow:0 4px 14px rgba(201,24,74,0.1);
+        background:var(--blanco);
+    }
+    .header-brand{
+        display:flex;
+        flex-direction:column;
+        line-height:1;
+    }
+    .topbar h1{
+        font-family:'Cormorant Garamond', serif;
+        font-size:28px;
+        font-weight:700;
+        color:var(--negro);
+        letter-spacing:1.5px;
+        white-space:nowrap;
+    }
+    .header-tagline{
+        font-size:8.5px;
+        font-weight:500;
+        letter-spacing:3.5px;
+        color:var(--rojo-pastel);
+        text-transform:uppercase;
+        margin-top:4px;
+        padding-left:2px;
+    }
+    .search-box{
+        flex:1;
+        max-width:440px;
+        background-color:var(--blanco);
+        border:1px solid var(--gris-borde);
+        border-radius:26px;
+        padding:11px 18px;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        font-size:13px;
+        color:#999;
+        transition:border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search-box:focus-within{
+        border-color:var(--rosa-activo);
+        box-shadow:0 0 0 3px rgba(255,179,198,0.25);
+    }
+    .search-box input{
+        border:none;
+        background:transparent;
+        outline:none;
+        flex:1;
+        font-size:13px;
+        color:var(--negro);
+    }
+    .search-box input::placeholder{color:#b8b8b8;}
+
+    .btn-cart-top{
+        background:var(--blanco);
+        border:1px solid var(--gris-borde);
+        cursor:pointer;
+        position:relative;
+        padding:10px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border-radius:50%;
+        width:46px;
+        height:46px;
+        transition:all 0.2s ease;
+    }
+    .btn-cart-top:hover{
+        background:var(--rosa-bebe);
+        border-color:var(--rosa-activo);
+    }
+    .btn-cart-top svg{width:22px;height:22px;stroke:var(--negro);}
+    .btn-cart-top .badge-top{
+        position:absolute;
+        top:-2px;
+        right:-2px;
+        background-color:var(--rojo-pastel);
+        color:white;
+        font-size:10px;
+        font-weight:600;
+        padding:2px 6px;
+        border-radius:10px;
+        min-width:20px;
+        text-align:center;
+        border:2px solid var(--fondo);
+    }
+
+    /* CATEGORÍAS */
+    .nav-cats{
+        display:flex;
+        overflow-x:auto;
+        gap:10px;
+        padding:18px 24px;
+        background-color:var(--fondo);
+        border-bottom:1px solid var(--gris-borde);
+        white-space:nowrap;
+        -webkit-overflow-scrolling:touch;
+        position:sticky;
+        top:82px;
+        z-index:99;
+        justify-content:center;
+    }
+    .nav-cats::-webkit-scrollbar{display:none;}
+    @media(max-width:768px){.nav-cats{justify-content:flex-start;}}
+
+    .cat-btn{
+        background-color:var(--blanco);
+        border:1.5px solid var(--gris-borde);
+        padding:11px 24px;
+        border-radius:26px;
+        font-size:13px;
+        font-weight:500;
+        color:var(--negro);
+        cursor:pointer;
+        transition:all 0.25s ease;
+        flex-shrink:0;
+        letter-spacing:0.3px;
+    }
+    .cat-btn.active{
+        background-color:var(--rosa-activo);
+        border-color:var(--rosa-activo);
+        color:var(--negro);
+        font-weight:600;
+        box-shadow:0 4px 14px rgba(255,179,198,0.4);
+    }
+    .cat-btn:hover:not(.active){
+        background-color:var(--rosa-bebe);
+        border-color:var(--rosa-bebe);
+        transform:translateY(-1px);
+    }
+
+    /* GRID */
+    .container{max-width:1400px;margin:0 auto;padding:20px 24px 10px;}
+    .productos-grid{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:16px;
+        padding-bottom:24px;
+    }
+    @media(min-width:640px){.productos-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(min-width:1024px){.productos-grid{grid-template-columns:repeat(4,1fr);gap:20px;}}
+    @media(min-width:1400px){.productos-grid{grid-template-columns:repeat(5,1fr);}}
+
+    .producto-card{
+        background:var(--blanco);
+        border:1px solid var(--gris-borde);
+        border-radius:16px;
+        overflow:hidden;
+        display:flex;
+        flex-direction:column;
+        transition:box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+        cursor:pointer;
+    }
+    .producto-card:hover{
+        box-shadow:0 12px 30px rgba(201,24,74,0.09);
+        transform:translateY(-3px);
+        border-color:var(--rosa-bebe);
+    }
+    .producto-img-wrap{
+        background-color:var(--rosa-bebe);
+        aspect-ratio:1/1;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        overflow:hidden;
+        position:relative;
+    }
+    .producto-img-wrap img{width:80%;height:80%;object-fit:contain;}
+    .producto-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;}
+    .producto-nombre{
+        font-size:12.5px;
+        font-weight:500;
+        color:#2b2b2b;
+        line-height:1.35;
+        min-height:34px;
+        display:-webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+    }
+    .producto-cat-tag{
+        font-size:9px;
+        color:#a17b8a;
+        text-transform:uppercase;
+        letter-spacing:1px;
+        margin-top:-2px;
+        font-weight:500;
+    }
+    .producto-bottom{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-top:8px;
+    }
+    .producto-precio{font-size:16px;font-weight:700;color:var(--negro);}
+
+    .btn-add-round{
+        width:36px;
+        height:36px;
+        border-radius:50%;
+        border:1.5px solid var(--negro);
+        background:var(--blanco);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        transition:all 0.2s ease;
+    }
+    .btn-add-round:hover{background:var(--negro);}
+    .btn-add-round:hover svg{stroke:var(--blanco);}
+    .btn-add-round svg{width:16px;height:16px;stroke:var(--negro);}
+
+    .cantidad-control{
+        display:flex;
+        align-items:center;
+        border:1.5px solid var(--gris-borde);
+        border-radius:24px;
+        padding:3px;
+        gap:4px;
+        background:var(--blanco);
+    }
+    .cantidad-control button{
+        width:28px;height:28px;border-radius:50%;border:none;background:transparent;
+        cursor:pointer;display:flex;align-items:center;justify-content:center;
+        transition:background 0.2s ease;
+    }
+    .cantidad-control button:hover{background:var(--rosa-bebe);}
+    .cantidad-control svg{width:14px;height:14px;stroke:var(--negro);}
+    .cantidad-control span{
+        font-size:12.5px;font-weight:600;min-width:20px;
+        text-align:center;color:var(--negro);
+    }
+
+    /* CARRITO */
+    .carrito-overlay{
+        position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:998;
+        opacity:0;visibility:hidden;
+        transition:opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .carrito-overlay.open{opacity:1;visibility:visible;}
+    .carrito-sidebar{
+        position:fixed;top:0;right:0;width:100%;max-width:420px;height:100vh;
+        background:var(--blanco);z-index:999;transform:translateX(100%);
+        transition:transform 0.4s cubic-bezier(0.25,0.8,0.25,1);
+        display:flex;flex-direction:column;
+    }
+    .carrito-sidebar.open{transform:translateX(0);}
+    .carrito-header{
+        padding:18px 20px;display:flex;align-items:center;gap:14px;
+        border-bottom:1px solid var(--gris-borde);
+    }
+    .carrito-header .btn-back{
+        background:transparent;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;
+    }
+    .carrito-header .btn-back svg{width:20px;height:20px;stroke:var(--negro);}
+    .carrito-header h2{font-size:17px;font-weight:600;color:var(--negro);flex:1;}
+
+    .carrito-vaciar-link{text-align:right;padding:8px 20px 0;}
+    .carrito-vaciar-link button{
+        background:transparent;border:none;color:var(--rojo-oscuro);
+        font-size:12px;text-decoration:underline;cursor:pointer;font-weight:500;
+    }
+    .carrito-body{flex:1;overflow-y:auto;padding:14px 20px 20px;}
+    .carrito-item{
+        display:flex;gap:12px;padding:14px 0;
+        border-bottom:1px solid var(--gris-borde);align-items:center;
+    }
+    .carrito-item:last-child{border-bottom:none;}
+    .carrito-item-img{
+        width:70px;height:70px;border-radius:10px;background:var(--rosa-bebe);
+        display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;
+    }
+    .carrito-item-img img{width:80%;height:80%;object-fit:contain;}
+    .carrito-item-info{flex:1;min-width:0;}
+    .carrito-item-nombre{font-size:12px;font-weight:400;color:#3a3a3a;margin-bottom:6px;line-height:1.3;}
+    .carrito-item-precio{font-size:14px;font-weight:600;color:var(--negro);}
+    .carrito-item-controls{
+        display:flex;align-items:center;gap:4px;
+        border:1.5px solid var(--gris-borde);border-radius:20px;padding:2px;
+    }
+    .carrito-item-controls button{
+        width:24px;height:24px;border-radius:50%;border:none;background:transparent;
+        cursor:pointer;display:flex;align-items:center;justify-content:center;
+    }
+    .carrito-item-controls button:hover{background:var(--rosa-bebe);}
+    .carrito-item-controls svg{width:12px;height:12px;stroke:var(--negro);}
+    .carrito-item-controls span{font-size:12px;font-weight:500;min-width:16px;text-align:center;}
+
+    .carrito-vacio{
+        flex:1;display:flex;flex-direction:column;align-items:center;
+        justify-content:center;padding:40px 20px;text-align:center;
+    }
+    .carrito-vacio svg{width:60px;height:60px;stroke:var(--negro);margin-bottom:20px;stroke-width:1.5;}
+    .carrito-vacio h3{font-size:18px;font-weight:600;color:var(--negro);margin-bottom:8px;}
+    .carrito-vacio p{font-size:12px;color:#666;line-height:1.5;}
+
+    .carrito-footer{
+        padding:14px 20px 20px;border-top:1px solid var(--gris-borde);background:var(--blanco);
+    }
+    .btn-checkout{
+        width:100%;background-color:var(--negro);color:var(--blanco);border:none;
+        border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;
+        align-items:center;font-size:14px;font-weight:500;cursor:pointer;
+        transition:all 0.25s ease;
+    }
+    .btn-checkout:hover{background-color:#000;}
+    .btn-checkout-left{display:flex;align-items:center;gap:12px;}
+    .btn-checkout .count-badge{
+        background:rgba(255,255,255,0.15);border-radius:6px;
+        padding:3px 10px;font-size:13px;font-weight:600;
+    }
+    .btn-checkout-right{display:flex;align-items:center;gap:8px;}
+    .btn-checkout svg{width:16px;height:16px;stroke:var(--blanco);}
+
+    /* PANTALLA WHATSAPP CON FORMULARIO */
+    .whatsapp-screen{
+        position:fixed;inset:0;background:var(--blanco);z-index:1001;
+        display:none;flex-direction:column;
+        overflow-y:auto;
+    }
+    .whatsapp-screen.open{display:flex;}
+    .whatsapp-header{
+        display:flex;align-items:center;gap:14px;
+        padding:20px;border-bottom:1px solid var(--gris-borde);
+        position:sticky;top:0;background:var(--blanco);z-index:2;
+    }
+    .whatsapp-header .btn-back{background:transparent;border:none;cursor:pointer;padding:4px;}
+    .whatsapp-header .btn-back svg{width:20px;height:20px;stroke:var(--negro);}
+    .whatsapp-header h2{font-size:18px;font-weight:600;color:var(--negro);}
+
+    .whatsapp-body{
+        flex:1;
+        padding:24px 20px 40px;
+        max-width:600px;
+        margin:0 auto;
+        width:100%;
+    }
+    .form-group{margin-bottom:18px;}
+    .form-group label{
+        display:block;
+        font-size:12px;
+        font-weight:500;
+        color:var(--negro);
+        margin-bottom:8px;
+        letter-spacing:0.3px;
+    }
+    .form-group label .req{color:var(--rojo-pastel);}
+    .form-group input,
+    .form-group textarea{
+        width:100%;
+        border:1.5px solid var(--gris-borde);
+        border-radius:12px;
+        padding:14px 16px;
+        font-size:14px;
+        font-family:'Poppins',sans-serif;
+        color:var(--negro);
+        background:var(--blanco);
+        outline:none;
+        transition:border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-group textarea{
+        resize:vertical;
+        min-height:90px;
+        line-height:1.5;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus{
+        border-color:var(--rosa-activo);
+        box-shadow:0 0 0 3px rgba(255,179,198,0.25);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder{color:#b8b8b8;}
+
+    .resumen-pedido{
+        background:var(--gris-suave);
+        border-radius:14px;
+        padding:16px 18px;
+        margin-bottom:20px;
+        border:1px solid var(--gris-borde);
+    }
+    .resumen-pedido h3{
+        font-size:12px;
+        font-weight:600;
+        color:var(--negro);
+        margin-bottom:10px;
+        letter-spacing:0.5px;
+        text-transform:uppercase;
+    }
+    .resumen-item{
+        display:flex;
+        justify-content:space-between;
+        font-size:12px;
+        color:#555;
+        padding:4px 0;
+    }
+    .resumen-total{
+        display:flex;
+        justify-content:space-between;
+        font-size:14px;
+        font-weight:700;
+        color:var(--negro);
+        padding-top:10px;
+        margin-top:8px;
+        border-top:1px dashed var(--gris-borde);
+    }
+
+    .btn-enviar-whatsapp{
+        width:100%;
+        background-color:#25d366;
+        color:white;
+        border:none;
+        border-radius:14px;
+        padding:18px;
+        font-size:15px;
+        font-weight:600;
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        letter-spacing:0.5px;
+        transition:all 0.25s ease;
+        box-shadow:0 6px 20px rgba(37,211,102,0.3);
+    }
+    .btn-enviar-whatsapp:hover{
+        background-color:#1ebe5b;
+        transform:translateY(-2px);
+        box-shadow:0 8px 24px rgba(37,211,102,0.45);
+    }
+    .btn-enviar-whatsapp svg{width:22px;height:22px;fill:white;}
+
+    /* FAB WHATSAPP */
+    .fab-cart{
+        position:fixed;bottom:20px;right:20px;width:56px;height:56px;
+        border-radius:50%;background-color:#25d366;border:none;
+        box-shadow:0 6px 20px rgba(37,211,102,0.4);cursor:pointer;
+        display:none;align-items:center;justify-content:center;z-index:900;
+    }
+    .fab-cart svg{width:26px;height:26px;fill:white;}
+
+    .seccion-cat{display:none;}
+    .seccion-cat.visible{display:block;}
+
+    /* MODAL PRODUCTO */
+    .modal-producto{
+        position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;
+        display:none;align-items:flex-end;justify-content:center;
+    }
+    .modal-producto.open{display:flex;}
+    @media(min-width:640px){.modal-producto{align-items:center;}}
+    .modal-content{
+        background:var(--blanco);width:100%;max-width:500px;max-height:92vh;
+        border-radius:20px 20px 0 0;overflow-y:auto;position:relative;
+        animation:slideUp 0.4s ease;
+    }
+    @media(min-width:640px){.modal-content{border-radius:20px;max-height:90vh;}}
+    @keyframes slideUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    .modal-close{
+        position:absolute;top:14px;right:14px;width:34px;height:34px;
+        border-radius:50%;background:var(--blanco);border:1px solid var(--gris-borde);
+        cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;
+    }
+    .modal-close svg{width:16px;height:16px;stroke:var(--negro);}
+    .modal-img{
+        width:100%;aspect-ratio:1/1;background:var(--rosa-bebe);
+        display:flex;align-items:center;justify-content:center;padding:30px;
+    }
+    .modal-img img{max-width:80%;max-height:80%;object-fit:contain;}
+    .modal-body{padding:20px;}
+    .modal-nombre{font-size:18px;font-weight:600;color:var(--negro);margin-bottom:6px;line-height:1.3;}
+    .modal-precio{font-size:22px;font-weight:600;color:var(--negro);margin-bottom:14px;}
+    .modal-descripcion{
+        font-size:13px;
+        font-weight:400;
+        color:#555;
+        line-height:1.6;
+        margin-bottom:20px;
+        padding:14px 16px;
+        background:var(--gris-suave);
+        border-radius:12px;
+        border-left:3px solid var(--rosa-activo);
+    }
+    .modal-actions{display:flex;gap:10px;align-items:center;}
+    .modal-actions .cantidad-control{padding:5px;border-width:1.5px;}
+    .modal-actions .cantidad-control button{width:32px;height:32px;}
+    .modal-actions .cantidad-control svg{width:16px;height:16px;}
+    .modal-actions .cantidad-control span{font-size:14px;min-width:22px;}
+    .modal-btn-add{
+        flex:1;background:var(--negro);color:var(--blanco);border:none;
+        border-radius:12px;padding:14px;font-size:14px;font-weight:500;
+        cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+    }
+    .modal-btn-add svg{width:16px;height:16px;stroke:var(--blanco);}
+
+    @media(max-width:640px){
+        .topbar{padding:12px 16px;gap:10px;}
+        .header-logo{width:44px;height:44px;}
+        .topbar h1{font-size:22px;}
+        .header-tagline{font-size:7.5px;letter-spacing:3px;}
+        .search-box{padding:9px 14px;font-size:12px;}
+        .search-box input{font-size:12px;}
+        .btn-cart-top{width:42px;height:42px;padding:8px;}
+        .btn-cart-top svg{width:20px;height:20px;}
+        .nav-cats{padding:14px 16px;top:76px;gap:8px;}
+        .cat-btn{padding:9px 18px;font-size:12px;}
+        .container{padding:16px 16px 10px;}
+    }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="header-left">
+        <img src="logoprincipal.jpeg" alt="Sabella" class="header-logo" onerror="this.style.display='none'">
+        <div class="header-brand">
+            <h1>Sabella</h1>
+            <div class="header-tagline">Makeup & Skincare</div>
+        </div>
+    </div>
+    <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Buscar producto">
+    </div>
+    <button class="btn-cart-top" onclick="abrirCarrito()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="badge-top" id="badgeTop">0</span>
+    </button>
+</div>
+
+<div class="nav-cats">
+    <button class="cat-btn active" onclick="filtrar('todos', event)">Ver todos</button>
+    <button class="cat-btn" onclick="filtrar('labios', event)">Labios</button>
+    <button class="cat-btn" onclick="filtrar('rostro', event)">Rostro</button>
+    <button class="cat-btn" onclick="filtrar('ojos', event)">Ojos</button>
+    <button class="cat-btn" onclick="filtrar('skincare', event)">Skincare</button>
+    <button class="cat-btn" onclick="filtrar('herramientas', event)">Herramientas</button>
+</div>
+
+<div class="container">
+    <div class="seccion-cat visible" data-cat="todos"><div class="productos-grid" id="grid-todos"></div></div>
+    <div class="seccion-cat" data-cat="labios"><div class="productos-grid" id="grid-labios"></div></div>
+    <div class="seccion-cat" data-cat="rostro"><div class="productos-grid" id="grid-rostro"></div></div>
+    <div class="seccion-cat" data-cat="ojos"><div class="productos-grid" id="grid-ojos"></div></div>
+    <div class="seccion-cat" data-cat="skincare"><div class="productos-grid" id="grid-skincare"></div></div>
+    <div class="seccion-cat" data-cat="herramientas"><div class="productos-grid" id="grid-herramientas"></div></div>
+</div>
+
+<div class="carrito-overlay" id="carritoOverlay" onclick="cerrarCarrito()"></div>
+
+<aside class="carrito-sidebar" id="carritoBar">
+    <div class="carrito-header">
+        <button class="btn-back" onclick="cerrarCarrito()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <h2>Carrito de Compras</h2>
+    </div>
+    <div id="carritoContenido"></div>
+</aside>
+
+<div class="modal-producto" id="modalProducto" onclick="if(event.target===this)cerrarModal()">
+    <div class="modal-content">
+        <button class="modal-close" onclick="cerrarModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="modal-img"><img id="modalImg" src="" alt=""></div>
+        <div class="modal-body">
+            <div class="modal-nombre" id="modalNombre"></div>
+            <div class="modal-precio" id="modalPrecio"></div>
+            <div class="modal-descripcion" id="modalDescripcion"></div>
+            <div class="modal-actions">
+                <div class="cantidad-control">
+                    <button onclick="cambiarCantidadModal(-1)"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14"/></svg></button>
+                    <span id="modalCantidad">1</span>
+                    <button onclick="cambiarCantidadModal(1)"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
+                <button class="modal-btn-add" onclick="agregarDesdeModal()">
+                    <span>Agregar</span>
+                    <span id="modalTotal">$0</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PANTALLA WHATSAPP CON FORMULARIO -->
+<div class="whatsapp-screen" id="whatsappScreen">
+    <div class="whatsapp-header">
+        <button class="btn-back" onclick="cerrarWhatsApp()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <h2>Realiza tu pedido por WhatsApp</h2>
+    </div>
+
+    <div class="whatsapp-body">
+        <div class="form-group">
+            <label>Nombre <span class="req">*</span></label>
+            <input type="text" id="clienteNombre" placeholder="Tu nombre completo">
+        </div>
+
+        <div class="form-group">
+            <label>Celular <span class="req">*</span></label>
+            <input type="tel" id="clienteCelular" placeholder="Ej. 4491282890">
+        </div>
+
+        <div class="form-group">
+            <label>Comentarios</label>
+            <textarea id="clienteComentarios" placeholder="Alguna indicación especial, dirección, etc."></textarea>
+        </div>
+
+        <div class="resumen-pedido">
+            <h3>Resumen del pedido</h3>
+            <div id="resumenItems"></div>
+            <div class="resumen-total">
+                <span>TOTAL</span>
+                <span id="resumenTotal">$0</span>
+            </div>
+        </div>
+
+        <button class="btn-enviar-whatsapp" onclick="enviarWhatsApp()">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            Enviar pedido por WhatsApp
+        </button>
+    </div>
+</div>
+
+<button class="fab-cart" id="fabWhats" onclick="abrirWhatsAppScreen()">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+</button>
+
+<script>
+const PRODUCTOS = [
+    // LABIOS
+    {id:'l1', cat:'labios', nombre:'E.l.f. Glow Reviver Lip Oil Stick - Loveslick', precio:240, img:'imagenes/elfglowreviverlipoilsticktonolovestick.png', desc:'Es un bálsamo labial con color y brillo que hidrata profundamente. Sirve para darle un acabado jugoso a tus labios mientras los cuida. Se aplica directamente sobre los labios las veces que quieras durante el día.'},
+    {id:'l2', cat:'labios', nombre:'E.l.f. Glow Reviver Lip Oil - Rose Envy', precio:270, img:'imagenes/elfglowreviverlipoiltonoroseenvy.png', desc:'Es un aceite labial con tono rosado que aporta brillo y nutrición. Sirve para hidratar y dar un toque de color natural a los labios. Se aplica con su aplicador directamente sobre los labios, solo o sobre tu labial favorito.'},
+    {id:'l3', cat:'labios', nombre:'E.l.f. Glow Reviver Lip Oil - Super Neutral', precio:270, img:'imagenes/elfglowreviverlipoiltonosuperneutral.png', desc:'Es un aceite labial de tono neutro que nutre e ilumina los labios. Sirve para hidratar sin aportar mucho color, ideal para el diario. Se aplica directo sobre los labios y puedes retocar cuantas veces quieras.'},
+    {id:'l4', cat:'labios', nombre:'E.l.f. Cream Glide Lip Liner - Spill The Tea', precio:240, img:'imagenes/elfcreamglideliplinertonospillthetea.png', desc:'Es un delineador labial en crema de tono natural. Sirve para definir el contorno de los labios y evitar que el labial se corra. Se aplica trazando el borde de los labios antes de poner el labial o gloss.'},
+    {id:'l5', cat:'labios', nombre:'E.l.f. Srsly Satin Lipstick - Creme', precio:170, img:'imagenes/elfsrslysatinlipsticktonocreme.png', desc:'Es un labial en barra con acabado satinado y tono crema. Sirve para dar color intenso y cremoso a los labios. Se aplica directamente desde la barra o con una brocha para más precisión.'},
+    {id:'l6', cat:'labios', nombre:'E.l.f. Srsly Satin Lipstick - Pepper', precio:170, img:'imagenes/elfsrslysatinlipsticktonopepper.png', desc:'Es un labial en barra satinado de tono rojizo terroso. Sirve para lograr un look elegante y natural a la vez. Se aplica directo sobre los labios, puede usarse solo o con delineador.'},
+    {id:'l7', cat:'labios', nombre:"L'Oréal Hyaluron Tint 521", precio:215, img:'imagenes/lorealparishyalurontintlipsatintinttono521.png', desc:'Es un tinte labial con ácido hialurónico que hidrata y da color. Sirve para lograr un efecto natural tipo rubor en los labios. Se aplica directo y puedes difuminarlo con el dedo para un acabado suave.'},
+    {id:'l8', cat:'labios', nombre:"L'Oréal Hyaluron Tint 601", precio:215, img:'imagenes/lorealparishyalurontintlipsatintinttono601.png', desc:'Es un tinte labial hidratante con un tono más intenso. Sirve para dar color duradero sin resecar los labios. Se aplica directo con el aplicador y difumina con el dedo si quieres un efecto más natural.'},
+    {id:'l9', cat:'labios', nombre:"L'Oréal Hyaluron Tint 640", precio:215, img:'imagenes/lorealparishyalurontintlipsatintinttono640.png', desc:'Es un tinte labial con ácido hialurónico en tono profundo. Sirve para dar un color intenso y jugoso que dura horas. Se aplica directo sobre los labios y se puede intensificar con varias capas.'},
+    {id:'l10', cat:'labios', nombre:"L'Oréal Infallible Laque 635", precio:190, img:'imagenes/lorealparisinfalliblelaqueresistence635.png', desc:'Es un labial líquido de larga duración con acabado laqueado. Sirve para tener color intenso que no se corre ni se borra. Se aplica con el aplicador y espera unos segundos a que seque.'},
+    {id:'l11', cat:'labios', nombre:"L'Oréal Infallible Laque 665", precio:190, img:'imagenes/lorealparisinfallibleloqueresistence665.png', desc:'Es un labial líquido de larga duración en tono vibrante. Sirve para mantener el color intacto durante todo el día. Se aplica con el aplicador desde el centro hacia las orillas y deja secar.'},
+    {id:'l12', cat:'labios', nombre:'Maybelline Lifter Glaze - Blue Boba', precio:190, img:'imagenes/maybellinelifterglazetonoblueboba.png', desc:'Es un gloss con un toque azulado que da efecto de labios más llenos. Sirve para dar brillo y volumen visual a los labios. Se aplica con su aplicador directo sobre los labios, solo o encima del labial.'},
+    {id:'l13', cat:'labios', nombre:'Maybelline Lifter Gloss 001', precio:175, img:'imagenes/maybellinelifterglosstono001.png', desc:'Es un gloss hidratante con aplicador grande que da brillo inmediato. Sirve para lucir labios jugosos y con aspecto cuidado. Se aplica directo sobre los labios siempre que quieras retocar.'},
+    {id:'l14', cat:'labios', nombre:'Maybelline Lifter Gloss 021', precio:175, img:'imagenes/maybellinelifterglosstono021.png', desc:'Es un gloss con tono suave y acabado brillante. Sirve para darle un extra de luz a los labios sin aportar mucho color. Se aplica con el aplicador tantas veces como quieras durante el día.'},
+    {id:'l15', cat:'labios', nombre:'Maybelline Super Stay Matte Ink 125', precio:190, img:'imagenes/maybellinenewyorksuperstaymatteinkliquidtono125.png', desc:'Es un labial líquido mate de larga duración. Sirve para tener color intenso sin retoques durante horas. Se aplica con el aplicador y espera a que seque completamente antes de comer o beber.'},
+    {id:'l16', cat:'labios', nombre:'Maybelline Serum Lipstick 003 Open Late', precio:165, img:'imagenes/maybellineserumlipsticktono003maybeits.png', desc:'Es un labial con textura de serum que hidrata mientras da color. Sirve para tener labios suaves con un tono natural y brillante. Se aplica directo con el aplicador y se puede retocar fácilmente.'},
+    {id:'l17', cat:'labios', nombre:'Maybelline Vinyl Ink 30 Unrivaled', precio:240, img:'imagenes/maybellinesuperstayvinylinktono30unrivaled.png', desc:'Es un labial líquido con acabado tipo vinilo muy brillante. Sirve para lograr un color intenso y de larga duración. Se aplica con el aplicador y espera a que se seque para un efecto espejo.'},
+    {id:'l18', cat:'labios', nombre:'NYX Duck Plump High Pigment 14', precio:210, img:'imagenes/nyxduckplumhighpigmenttono14hallofflame.png', desc:'Es un gloss con efecto de volumen que hace los labios más llenos. Sirve para dar color intenso y sensación de plenitud. Se aplica directo con el aplicador y puedes retocar cuando quieras.'},
+    {id:'l19', cat:'labios', nombre:'NYX I.V. Hydrating Gloss Stain 09', precio:210, img:'imagenes/nyxivhydratingglossstaintono09blushrush.png', desc:'Es un gloss que hidrata y deja un tinte duradero en los labios. Sirve para dar color y brillo que se mantienen por horas. Se aplica directo sobre los labios y se puede usar solo o sobre labial.'},
+    {id:'l20', cat:'labios', nombre:'NYX Professional Lip Liner - Discorage', precio:130, img:'imagenes/nyxprofessionalmakeupliplinertonodiscorage.png', desc:'Es un delineador labial en lápiz de tono natural. Sirve para definir la forma de los labios y que el labial dure más. Se aplica dibujando el contorno de los labios antes del labial.'},
+    {id:'l21', cat:'labios', nombre:'NYX Butter Gloss - Orangesicle', precio:170, img:'imagenes/nyxprofessionalmakeupbutterglossnonstickylipglosstonoorangesicle.png', desc:'Es un gloss con textura mantecosa y tono anaranjado suave. Sirve para dar brillo y color cálido a los labios. Se aplica directo con el aplicador y puedes retocar a lo largo del día.'},
+    {id:'l22', cat:'labios', nombre:'NYX Shine Loud - Rebel In Red', precio:230, img:'imagenes/nyxprofessionalmakeupshineloudhighshineliptonorebelinred.png', desc:'Es un labial líquido de doble acabado con brillo intenso. Sirve para tener un color rojo potente y brillante que dura todo el día. Se aplica la capa de color, se deja secar y luego se aplica el gloss encima.'},
+    {id:'l23', cat:'labios', nombre:'E.l.f. Sheer For It Blush Tint - Orange Crush', precio:175, img:'imagenes/elfsheerforitblushtinttonoorangecrush.png', desc:'Es un tinte líquido para labios y mejillas en tono coral. Sirve para dar un toque de color natural tipo rubor. Se aplica con el aplicador directo sobre los labios y se difumina con los dedos.'},
+    // ROSTRO
+    {id:'r1', cat:'rostro', nombre:'E.l.f. 16HR Camo Concealer - Fair Beige', precio:220, img:'imagenes/elf16hrcamoconcealertonofairbeige.png', desc:'Es un corrector de cobertura alta que dura hasta 16 horas. Sirve para cubrir ojeras, manchas e imperfecciones. Se aplica con el aplicador debajo del ojo o sobre la imperfección y se difumina con la yema del dedo o esponja.'},
+    {id:'r2', cat:'rostro', nombre:'E.l.f. 16HR Camo Concealer - Fair Warm', precio:220, img:'imagenes/elf16hrcamoconcealertonofairwarm.png', desc:'Es un corrector de alta cobertura con tono cálido. Sirve para cubrir imperfecciones y unificar el tono de la piel. Se aplica sobre la zona a cubrir y se difumina con esponja húmeda para un acabado natural.'},
+    {id:'r3', cat:'rostro', nombre:'E.l.f. 16HR Camo Concealer - Medium Warm', precio:220, img:'imagenes/elf16hrcamoconcealertonomediumwarm.png', desc:'Es un corrector de larga duración en tono medio cálido. Sirve para cubrir ojeras y manchas en pieles medianas. Se aplica en pequeñas cantidades y se difumina con esponja o brocha.'},
+    {id:'r4', cat:'rostro', nombre:'E.l.f. Bronzing Drops - Rose Gold', precio:350, img:'imagenes/elfbronzingdropstonorosegold.png', desc:'Son gotas bronceadoras con un tono dorado rosado. Sirven para dar un aspecto bronceado y luminoso al rostro. Se mezclan con la base o el hidratante antes de aplicar, o se ponen directo sobre la piel y se difuminan.'},
+    {id:'r5', cat:'rostro', nombre:'E.l.f. Camo Liquid Blush - Bold-Faced Lilac', precio:230, img:'imagenes/elfcamoliquidblushtonoboldfacedlilac.png', desc:'Es un rubor líquido de tono lila con alta pigmentación. Sirve para dar color a las mejillas con acabado natural. Se aplica una gota en cada mejilla y se difumina con los dedos o esponja.'},
+    {id:'r6', cat:'rostro', nombre:'E.l.f. Camo Powder Foundation 375N', precio:300, img:'imagenes/elfcamopowderfoundationtonomedium375n.png', desc:'Es una base en polvo con cobertura media y acabado mate. Sirve para unificar el tono de la piel y controlar el brillo. Se aplica con esponja o brocha dando toques sobre el rostro.'},
+    {id:'r7', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Blush - Magic Hour', precio:280, img:'imagenes/elfhaloglowbeautywandblushtonomagichour.png', desc:'Es un rubor líquido en formato de varita con acabado luminoso. Sirve para dar color a las mejillas con un efecto radiante. Se aplica directo en las mejillas y se difumina con los dedos o esponja.'},
+    {id:'r8', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Contour - Light/Medium', precio:280, img:'imagenes/elfhaloglowbeautywandcontourtonolightmedium.png', desc:'Es un contour líquido en varita para definir el rostro. Sirve para crear sombras y dar estructura a las facciones. Se aplica bajo los pómulos, frente y mandíbula y se difumina muy bien con esponja.'},
+    {id:'r9', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Highlight - Champagne', precio:280, img:'imagenes/elfhaloglowbeautywandhighlightertonochampagnecampaign.png', desc:'Es un iluminador líquido en varita con tono champán. Sirve para dar luz y un acabado radiante a puntos clave del rostro. Se aplica en pómulos, arco de la ceja y puente de la nariz, luego se difumina.'},
+    {id:'r10', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Highlight - Rose Quartz', precio:280, img:'imagenes/elfhaloglowbeautywandhighlightertonorosequartz.png', desc:'Es un iluminador líquido en varita con tono rosado perlado. Sirve para aportar luminosidad y un toque fresco al rostro. Se aplica en los puntos altos del rostro y se difumina con los dedos.'},
+    {id:'r11', cat:'rostro', nombre:'E.l.f. Halo Glow Liquid Filter 01 Fair', precio:430, img:'imagenes/elfhaloglowliquidfiltertono01fairtresclair.png', desc:'Es un filtro líquido que da un acabado radiante tipo buena piel. Sirve para difuminar imperfecciones y aportar luz natural al rostro. Se puede usar solo, mezclado con la base o debajo de ella.'},
+    {id:'r12', cat:'rostro', nombre:'E.l.f. Liquid Poreless Putty Primer', precio:300, img:'imagenes/elfliquidporelesspputtyprimer.png', desc:'Es un primer líquido que minimiza los poros y prepara la piel. Sirve para que el maquillaje dure más y se vea más uniforme. Se aplica con los dedos sobre el rostro limpio antes de la base.'},
+    {id:'r13', cat:'rostro', nombre:'E.l.f. Matte Putty Primer', precio:300, img:'imagenes/elfmatteputtyprimer.png', desc:'Es un primer en textura de masilla con acabado mate. Sirve para controlar el brillo y difuminar la textura de la piel. Se aplica una capa fina sobre el rostro antes del maquillaje.'},
+    {id:'r14', cat:'rostro', nombre:'E.l.f. Perfect Finish HD Powder', precio:280, img:'imagenes/elfpefectfinishhdpowder.png', desc:'Es un polvo translúcido de acabado natural. Sirve para sellar el maquillaje y quitar el brillo sin cambiar el color de la piel. Se aplica con brocha o esponja en las zonas que tienden a brillar.'},
+    {id:'r15', cat:'rostro', nombre:'E.l.f. Power Grip Primer', precio:300, img:'imagenes/elfpowergripprimer.png', desc:'Es un primer en gel que ayuda a que el maquillaje se adhiera mejor. Sirve para que la base dure todo el día sin moverse. Se aplica una capa fina sobre el rostro limpio antes de la base.'},
+    {id:'r16', cat:'rostro', nombre:'E.l.f. Power Grip + Niacinamide Mini', precio:215, img:'imagenes/elfpowergripprimer4niacinamidemini.png', desc:'Es un primer en gel con niacinamida que controla el sebo. Sirve para preparar la piel, minimizar poros y fijar el maquillaje. Se aplica sobre el rostro limpio antes de la base en capa fina.'},
+    {id:'r18', cat:'rostro', nombre:'E.l.f. Soft Glam Corrector - Cheeky Lychee', precio:160, img:'imagenes/elfsoftglamconcealertonocheekylychee.png', desc:'Es un corrector en tono salmón para neutralizar ojeras oscuras. Sirve para disimular el tono morado o azulado de la ojera. Se aplica debajo del corrector habitual y se difumina suavemente.'},
+    {id:'r19', cat:'rostro', nombre:'E.l.f. Velvet Finish Face Primer Mini', precio:230, img:'imagenes/elfvelvetfinishfaceprimermini.png', desc:'Es un primer en formato mini con acabado aterciopelado. Sirve para alisar la piel y prepararla para el maquillaje. Se aplica con los dedos sobre el rostro limpio antes de la base.'},
+    {id:'r20', cat:'rostro', nombre:"L'Oréal Infallible Concealer 340", precio:270, img:'imagenes/lorealparisinfalliblefullwearconcealertono340.png', desc:'Es un corrector de alta cobertura y larga duración. Sirve para cubrir ojeras, manchas y granitos sin marcarse. Se aplica directo sobre la zona con el aplicador y se difumina con esponja o dedo.'},
+    {id:'r21', cat:'rostro', nombre:"L'Oréal Lumi Liquid Blush 610", precio:230, img:'imagenes/lorealparislumiliquidblushtono610dewyrichcoral.png', desc:'Es un rubor líquido con acabado luminoso en tono coral. Sirve para dar color y luz natural a las mejillas. Se aplica con el aplicador en las mejillas y se difumina rápidamente con los dedos.'},
+    {id:'r22', cat:'rostro', nombre:'Maybelline Fit Me! Powder 230', precio:270, img:'imagenes/maybellinefitmematteporelesstono230naturalbuff.png', desc:'Es un polvo compacto que matifica y fija el maquillaje. Sirve para controlar el brillo y emparejar el tono de la piel. Se aplica con la esponja que incluye o con brocha en las zonas con brillo.'},
+    {id:'r23', cat:'rostro', nombre:'NYX Stay Matte Foundation', precio:300, img:'imagenes/nyxprofessionalmakeupstaymattebutnotflatpowderfoundation.png', desc:'Es una base en polvo compacto con acabado mate natural. Sirve para unificar el tono de la piel y controlar el brillo. Se aplica con esponja o brocha dando toques en todo el rostro.'},
+    // OJOS
+    {id:'o1', cat:'ojos', nombre:'E.l.f. Bite-Size Brow Palette - Taupe', precio:170, img:'imagenes/elfbitesizebrowpalettetonotaupe.png', desc:'Es una paleta pequeña de sombras para cejas en tono taupe. Sirve para rellenar y definir las cejas de forma natural. Se aplica con una brocha angular sobre la ceja dando pequeños toques.'},
+    {id:'o2', cat:'ojos', nombre:'E.l.f. Brow Lift Gel', precio:190, img:'imagenes/elfbrowlift.png', desc:'Es un gel transparente que fija las cejas en su lugar todo el día. Sirve para peinarlas y mantenerlas ordenadas sin dejar residuos. Se aplica con el cepillo incluido peinando las cejas hacia arriba.'},
+    {id:'o3', cat:'ojos', nombre:'E.l.f. Incredi-Curl Mascara - Pitch Black', precio:250, img:'imagenes/elfincredicurlmascaratonopitchblack.png', desc:'Es una máscara de pestañas que riza y da volumen intenso. Sirve para alargar y curvar las pestañas desde la raíz. Se aplica desde la base de las pestañas haciendo movimientos en zigzag hacia las puntas.'},
+    {id:'o4', cat:'ojos', nombre:'E.l.f. No Budge Cream Shadow - Canyon', precio:170, img:'imagenes/elfnobudgecreameyeshadowcanyontonorosegold.png', desc:'Es una sombra en crema de larga duración en tono dorado rosado. Sirve para dar color a los párpados sin que se corra. Se aplica con los dedos o brocha sobre el párpado y se difumina rápidamente.'},
+    {id:'o5', cat:'ojos', nombre:'E.l.f. No Budge Precision Liner - Black', precio:215, img:'imagenes/elfnobudgeprecisionlinerblack.png', desc:'Es un delineador de ojos en lápiz con punta precisa y color negro intenso. Sirve para definir la línea de las pestañas y hacer delineados finos. Se aplica trazando la línea pegada a las pestañas superiores o inferiores.'},
+    {id:'o6', cat:'ojos', nombre:'E.l.f. Retractable Eyeliner - Blue', precio:215, img:'imagenes/elfnobudgeretractableeyelinerblue.png', desc:'Es un delineador retráctil de color azul con textura suave. Sirve para dar un toque de color divertido a la mirada. Se aplica trazando la línea de las pestañas o en la línea de agua para un look más intenso.'},
+    {id:'o7', cat:'ojos', nombre:'E.l.f. Ultra Precise Brow Pencil - Neutral Brown', precio:190, img:'imagenes/elfultraprecisebrowpenciltononeutralbrown.png', desc:'Es un lápiz de cejas con punta ultra fina en tono café neutro. Sirve para dibujar pelos y rellenar zonas con poca ceja. Se aplica con trazos cortos y suaves siguiendo la dirección natural del pelo.'},
+    {id:'o8', cat:'ojos', nombre:'Maybelline Hyper Easy Eyeliner 810', precio:235, img:'imagenes/maybellinehypereasyliquideyelinertono810pitchbrown.png', desc:'Es un delineador líquido con punta de pincel flexible. Sirve para hacer delineados finos o gruesos con precisión. Se aplica trazando la línea desde el lagrimal hasta el final del ojo.'},
+    {id:'o9', cat:'ojos', nombre:'NYX Blade & Shade Nano Brow - Espresso', precio:220, img:'imagenes/nyxprofessionalmakeupbladeyshadenanobrowpeciltonoespresso.png', desc:'Es un lápiz de cejas con punta muy fina en tono café oscuro. Sirve para dibujar pelos muy naturales y definir la ceja. Se aplica con trazos cortos siguiendo la forma natural de la ceja.'},
+    {id:'o10', cat:'ojos', nombre:'NYX Two Timer Dual Eyeliner - Jet Black', precio:250, img:'imagenes/nyxprofessionalmakeuptwotimerdualendedeyelinertonojetblack.png', desc:'Es un delineador de doble punta con lápiz de un lado y líquido del otro. Sirve para hacer delineados precisos y también difuminar. Se usa el lápiz para la línea de agua y el líquido para el delineado superior.'},
+    // SKINCARE
+    {id:'s1', cat:'skincare', nombre:'E.l.f. Holy Hydration! Cleansing Balm', precio:330, img:'imagenes/elfholyhydrationmakeupmeltingcleansingbalm.png', desc:'Es un bálsamo desmaquillante que se convierte en aceite al contacto con la piel. Sirve para disolver el maquillaje y las impurezas sin resecar. Se aplica con las manos secas sobre el rostro, se masajea y se enjuaga con agua.'},
+    {id:'s2', cat:'skincare', nombre:'E.l.f. Skin Whoa Glow SPF 30', precio:410, img:'imagenes/elfskinwhoaglowspf30.png', desc:'Es un protector solar con color y acabado luminoso SPF 30. Sirve para proteger la piel del sol mientras da un efecto radiante. Se aplica como último paso del skincare o como base ligera en la mañana.'},
+    {id:'s3', cat:'skincare', nombre:'Starface Hydro-Star 32 pz Amarillos', precio:360, img:'imagenes/Starfacehydrostarpimplepatches32patchesamarillos.png', desc:'Son parches hidrocoloides en forma de estrella para el acné. Sirven para absorber las impurezas y reducir el granito durante la noche. Se pegan sobre el granito limpio y seco y se dejan actuar al menos 6 horas.'},
+    {id:'s4', cat:'skincare', nombre:'Starface Hydro-Star Extra Cute 48 pz', precio:300, img:'imagenes/Starfacehydrostarpimplepatchesextrasmall48piezas6colores.png', desc:'Son parches para granitos en tamaño extra chico y varios colores. Sirven para cubrir y tratar pequeños granitos de forma divertida. Se aplican sobre el granito limpio y se retiran después de varias horas.'},
+    // HERRAMIENTAS
+    {id:'h1', cat:'herramientas', nombre:'E.l.f. Mechanical Eyelash Curler', precio:180, img:'imagenes/elfmechanicaleyelashcurler.png', desc:'Es un rizador de pestañas mecánico con almohadilla de silicón. Sirve para curvar las pestañas y hacer que se vean más largas. Se usa antes de la máscara, presionando suavemente cerca de la base de las pestañas.'},
+    {id:'h2', cat:'herramientas', nombre:'E.l.f. Makeup Mist & Set', precio:220, img:'imagenes/elfmakeupmistyset.png', desc:'Es una bruma fijadora que mantiene el maquillaje en su lugar. Sirve para sellar el maquillaje y refrescar la piel durante el día. Se rocía sobre el rostro a unos 20 cm de distancia con los ojos cerrados.'},
+    {id:'h3', cat:'herramientas', nombre:'E.l.f. Power Grip Dewy Spray', precio:315, img:'imagenes/elfpowergripdewysettingspray.png', desc:'Es una bruma fijadora con acabado luminoso que hidrata. Sirve para fijar el maquillaje y dar un efecto jugoso a la piel. Se aplica después del maquillaje rociando sobre el rostro con los ojos cerrados.'},
+    {id:'h4', cat:'herramientas', nombre:'E.l.f. Safe Travels Sponge Case', precio:135, img:'imagenes/elfsafetravelssponge.png', desc:'Es un estuche transparente para guardar esponjas de maquillaje. Sirve para mantener la esponja limpia y protegida cuando viajas. Se abre, se coloca la esponja dentro y se cierra para llevarla en tu bolsa.'},
+    {id:'h5', cat:'herramientas', nombre:'E.l.f. Stay All Night Setting Mist', precio:315, img:'imagenes/elfstayallnightmicrofinesettingmist.png', desc:'Es una bruma fijadora de larga duración con acabado natural. Sirve para que el maquillaje dure toda la noche sin moverse. Se rocía sobre el rostro después de maquillar, manteniendo los ojos cerrados.'},
+    {id:'h6', cat:'herramientas', nombre:'E.l.f. Total Face Brush', precio:135, img:'imagenes/elftotalfacebrush.png', desc:'Es una brocha grande y suave para aplicar productos en todo el rostro. Sirve para aplicar polvo, rubor o base en polvo de forma uniforme. Se usa tomando un poco de producto y aplicando con movimientos suaves.'},
+    {id:'h7', cat:'herramientas', nombre:'NYX Matte Finish Setting Spray', precio:190, img:'imagenes/nyxprofessionalmakeupmattefinishmakeupsettingspray.png', desc:'Es una bruma fijadora con acabado mate que controla el brillo. Sirve para fijar el maquillaje y mantener la piel sin brillos por horas. Se rocía sobre el rostro a unos 20 cm, con los ojos cerrados.'}
+];
+
+const CAT_LABEL = {labios:'Labios',rostro:'Rostro',ojos:'Ojos',skincare:'Skincare',herramientas:'Herramientas'};
+
+let carrito = {};
+let modalProducto = null;
+let modalCantidad = 1;
+
+function renderizarProductos(){
+    renderGrid('grid-todos', PRODUCTOS, true);
+    renderGrid('grid-labios', PRODUCTOS.filter(p=>p.cat==='labios'), false);
+    renderGrid('grid-rostro', PRODUCTOS.filter(p=>p.cat==='rostro'), false);
+    renderGrid('grid-ojos', PRODUCTOS.filter(p=>p.cat==='ojos'), false);
+    renderGrid('grid-skincare', PRODUCTOS.filter(p=>p.cat==='skincare'), false);
+    renderGrid('grid-herramientas', PRODUCTOS.filter(p=>p.cat==='herramientas'), false);
+}
+
+function renderGrid(gridId, productos, mostrarCat){
+    const grid = document.getElementById(gridId);
+    if(!grid) return;
+    grid.innerHTML = '';
+    productos.forEach(p=>grid.appendChild(crearCard(p, mostrarCat)));
+}
+
+function crearCard(p, mostrarCat){
+    const card = document.createElement('div');
+    card.className = 'producto-card';
+    const cant = carrito[p.id] || 0;
+
+    let footerHTML;
+    if(cant > 0){
+        footerHTML = `
+            <div class="cantidad-control">
+                <button onclick="event.stopPropagation();restar('${p.id}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14"/></svg>
+                </button>
+                <span>${cant}</span>
+                <button onclick="event.stopPropagation();sumar('${p.id}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+            </div>
+        `;
+    } else {
+        footerHTML = `
+            <button class="btn-add-round" onclick="event.stopPropagation();sumar('${p.id}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+        `;
+    }
+
+    const catTagHTML = mostrarCat ? `<div class="producto-cat-tag">${CAT_LABEL[p.cat] || p.cat}</div>` : '';
+
+    card.innerHTML = `
+        <div class="producto-img-wrap">
+            <img src="${p.img}" alt="${p.nombre}" loading="lazy">
+        </div>
+        <div class="producto-body">
+            <div class="producto-nombre">${p.nombre}</div>
+            ${catTagHTML}
+            <div class="producto-bottom">
+                <div class="producto-precio">$${p.precio}</div>
+                ${footerHTML}
+            </div>
+        </div>
+    `;
+
+    card.addEventListener('click', ()=>abrirModal(p.id));
+    return card;
+}
+
+function sumar(id){carrito[id] = (carrito[id]||0)+1; refrescar();}
+function restar(id){
+    if(!carrito[id]) return;
+    carrito[id]--;
+    if(carrito[id] <= 0) delete carrito[id];
+    refrescar();
+}
+function vaciarCarrito(){
+    if(Object.keys(carrito).length === 0) return;
+    if(confirm('¿Vaciar el carrito?')){
+        carrito = {};
+        refrescar();
+    }
+}
+
+function refrescar(){
+    renderizarProductos();
+    const totalItems = Object.values(carrito).reduce((a,b)=>a+b,0);
+    document.getElementById('badgeTop').textContent = totalItems;
+    document.getElementById('badgeTop').style.display = totalItems > 0 ? 'block' : 'none';
+    renderizarCarrito();
+    document.getElementById('fabWhats').style.display = totalItems > 0 ? 'flex' : 'none';
+}
+
+function renderizarCarrito(){
+    const cont = document.getElementById('carritoContenido');
+    const ids = Object.keys(carrito);
+
+    if(ids.length === 0){
+        cont.innerHTML = `
+            <div class="carrito-vacio">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                <h3>Tu carrito está vacío</h3>
+                <p>Agrega algunos productos para comenzar.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let total = 0;
+    let itemsHTML = '<div class="carrito-vaciar-link"><button onclick="vaciarCarrito()">Vaciar Carrito</button></div>';
+    itemsHTML += '<div class="carrito-body">';
+
+    ids.forEach(id=>{
+        const p = PRODUCTOS.find(x=>x.id===id);
+        const cant = carrito[id];
+        total += p.precio * cant;
+        itemsHTML += `
+            <div class="carrito-item">
+                <div class="carrito-item-img"><img src="${p.img}" alt=""></div>
+                <div class="carrito-item-info">
+                    <div class="carrito-item-nombre">${p.nombre}</div>
+                    <div class="carrito-item-precio">$${p.precio}</div>
+                </div>
+                <div class="carrito-item-controls">
+                    <button onclick="restar('${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14"/></svg></button>
+                    <span>${cant}</span>
+                    <button onclick="sumar('${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
+            </div>
+        `;
+    });
+    itemsHTML += '</div>';
+
+    const totalItems = Object.values(carrito).reduce((a,b)=>a+b,0);
+    itemsHTML += `
+        <div class="carrito-footer">
+            <button class="btn-checkout" onclick="abrirWhatsAppScreen()">
+                <div class="btn-checkout-left">
+                    <span class="count-badge">${totalItems}</span>
+                    <span>Agregar</span>
+                </div>
+                <div class="btn-checkout-right">
+                    <span>$${total}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                </div>
+            </button>
+        </div>
+    `;
+
+    cont.innerHTML = itemsHTML;
+}
+
+function abrirCarrito(){
+    document.getElementById('carritoBar').classList.add('open');
+    document.getElementById('carritoOverlay').classList.add('open');
+}
+function cerrarCarrito(){
+    document.getElementById('carritoBar').classList.remove('open');
+    document.getElementById('carritoOverlay').classList.remove('open');
+}
+
+function abrirModal(id){
+    const p = PRODUCTOS.find(x=>x.id===id);
+    if(!p) return;
+    modalProducto = p;
+    modalCantidad = carrito[p.id] || 1;
+    document.getElementById('modalImg').src = p.img;
+    document.getElementById('modalNombre').textContent = p.nombre;
+    document.getElementById('modalPrecio').textContent = '$' + p.precio;
+    document.getElementById('modalDescripcion').textContent = p.desc || 'Sin descripción disponible.';
+    document.getElementById('modalCantidad').textContent = modalCantidad;
+    document.getElementById('modalTotal').textContent = '$' + (p.precio * modalCantidad);
+    document.getElementById('modalProducto').classList.add('open');
+}
+function cerrarModal(){
+    document.getElementById('modalProducto').classList.remove('open');
+    modalProducto = null;
+}
+function cambiarCantidadModal(delta){
+    modalCantidad = Math.max(1, modalCantidad + delta);
+    document.getElementById('modalCantidad').textContent = modalCantidad;
+    document.getElementById('modalTotal').textContent = '$' + (modalProducto.precio * modalCantidad);
+}
+function agregarDesdeModal(){
+    if(!modalProducto) return;
+    carrito[modalProducto.id] = (carrito[modalProducto.id]||0) + modalCantidad;
+    cerrarModal();
+    refrescar();
+}
+
+/* PANTALLA WHATSAPP CON FORMULARIO */
+function abrirWhatsAppScreen(){
+    if(Object.keys(carrito).length === 0) return;
+
+    const resumenDiv = document.getElementById('resumenItems');
+    let total = 0;
+    let resumenHTML = '';
+    Object.keys(carrito).forEach(id=>{
+        const p = PRODUCTOS.find(x=>x.id===id);
+        const cant = carrito[id];
+        const subtotal = p.precio * cant;
+        total += subtotal;
+        resumenHTML += `<div class="resumen-item"><span>${p.nombre} (x${cant})</span><span>$${subtotal}</span></div>`;
+    });
+    resumenDiv.innerHTML = resumenHTML;
+    document.getElementById('resumenTotal').textContent = '$' + total;
+
+    document.getElementById('whatsappScreen').classList.add('open');
+}
+function cerrarWhatsApp(){
+    document.getElementById('whatsappScreen').classList.remove('open');
+}
+
+function enviarWhatsApp(){
+    const nombre = document.getElementById('clienteNombre').value.trim();
+    const celular = document.getElementById('clienteCelular').value.trim();
+    const comentarios = document.getElementById('clienteComentarios').value.trim();
+
+    if(!nombre){
+        alert('Por favor escribe tu nombre para continuar.');
+        document.getElementById('clienteNombre').focus();
+        return;
+    }
+
+    if(!celular){
+        alert('Por favor escribe tu número de celular para continuar.');
+        document.getElementById('clienteCelular').focus();
+        return;
+    }
+
+    let mensaje = 'Hola! Me gustaría hacer un pedido%0A';
+    mensaje += `*Nombre:* ${encodeURIComponent(nombre)}%0A`;
+    mensaje += `*Celular:* ${encodeURIComponent(celular)}%0A`;
+    mensaje += `*Comentarios:* ${encodeURIComponent(comentarios || 'Ninguno')}%0A%0A`;
+
+    let total = 0;
+    Object.keys(carrito).forEach(id=>{
+        const p = PRODUCTOS.find(x=>x.id===id);
+        const cant = carrito[id];
+        total += p.precio * cant;
+        mensaje += `*${p.nombre} (x${cant})*%0A`;
+    });
+    mensaje += `%0A*TOTAL: $${total}*`;
+
+    window.open(`https://wa.me/52449128289?text=${mensaje}`, '_blank');
+}
+
+function filtrar(cat, event){
+    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.seccion-cat').forEach(sec=>{
+        if(sec.dataset.cat === cat){
+            sec.classList.add('visible');
+        } else {
+            sec.classList.remove('visible');
+        }
+    });
+}
+
+renderizarProductos();
+refrescar();
+</script>
+</body>
+</html>

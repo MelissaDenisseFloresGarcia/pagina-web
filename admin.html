@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Sabella</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --fondo:#fdfbfb;--rosa-bebe:#ffe5ec;--rosa-activo:#ffb3c6;
+        --rojo-pastel:#ff4d6d;--rojo-oscuro:#c9184a;--texto:#590d22;
+        --blanco:#ffffff;--negro:#1a1a1a;--gris-borde:#ececec;--gris-suave:#f7f5f5;
+        --verde:#25d366;--amarillo:#ffc107;--rojo:#dc3545;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{background-color:var(--fondo);color:var(--texto);padding-bottom:40px;}
+
+    /* LOGIN */
+    .login-screen{position:fixed;inset:0;background:linear-gradient(160deg,#fff8f9,#ffe5ec);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .login-screen.hidden{display:none;}
+    .login-box{background:var(--blanco);padding:40px 30px;border-radius:20px;box-shadow:0 20px 60px rgba(201,24,74,0.15);width:100%;max-width:400px;text-align:center;}
+    .login-box h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--negro);letter-spacing:2px;margin-bottom:8px;}
+    .login-box p{font-size:12px;color:#999;margin-bottom:28px;letter-spacing:1px;text-transform:uppercase;}
+    .login-box input{width:100%;border:1.5px solid var(--gris-borde);border-radius:12px;padding:14px 16px;font-size:14px;margin-bottom:16px;outline:none;transition:border-color 0.2s ease;}
+    .login-box input:focus{border-color:var(--rosa-activo);}
+    .login-box button{width:100%;background:var(--negro);color:var(--blanco);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:1px;}
+    .login-box button:hover{background:#000;}
+    .login-error{color:var(--rojo);font-size:12px;margin-top:12px;display:none;}
+
+    /* HEADER */
+    .admin-topbar{background:var(--blanco);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gris-borde);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:12px;}
+    .admin-topbar h1{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--negro);letter-spacing:1.5px;}
+    .admin-topbar h1 span{font-size:11px;color:var(--rojo-pastel);letter-spacing:2px;text-transform:uppercase;display:block;font-family:'Poppins',sans-serif;font-weight:500;margin-top:2px;}
+    .admin-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    .admin-btn{background:var(--blanco);border:1.5px solid var(--gris-borde);padding:9px 18px;border-radius:22px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s ease;color:var(--negro);}
+    .admin-btn:hover{background:var(--rosa-bebe);border-color:var(--rosa-activo);}
+    .admin-btn.active{background:var(--negro);color:var(--blanco);border-color:var(--negro);}
+    .admin-btn.salir{background:var(--rojo-pastel);color:var(--blanco);border-color:var(--rojo-pastel);}
+
+    .admin-container{max-width:1100px;margin:0 auto;padding:24px;}
+
+    .tab-panel{display:none;}
+    .tab-panel.visible{display:block;}
+
+    .section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--negro);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--gris-borde);display:flex;justify-content:space-between;align-items:center;}
+    .section-title .count{font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;color:#999;}
+
+    /* PEDIDO CARD */
+    .pedido-card{background:var(--blanco);border:1px solid var(--gris-borde);border-radius:14px;padding:18px;margin-bottom:14px;transition:box-shadow 0.2s ease;}
+    .pedido-card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.05);}
+    .pedido-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+    .pedido-info{flex:1;min-width:0;}
+    .pedido-nombre{font-size:15px;font-weight:600;color:var(--negro);margin-bottom:4px;}
+    .pedido-contacto{font-size:12px;color:#666;}
+    .pedido-contacto a{color:var(--rojo-oscuro);text-decoration:none;font-weight:500;}
+    .pedido-fecha{font-size:11px;color:#999;margin-top:4px;}
+    .pedido-estado{font-size:10px;font-weight:600;padding:4px 12px;border-radius:12px;letter-spacing:1px;text-transform:uppercase;height:fit-content;}
+    .estado-pendiente{background:#fff3cd;color:#856404;}
+    .estado-confirmado{background:#d4edda;color:#155724;}
+    .estado-cancelado{background:#f8d7da;color:#721c24;}
+
+    .pedido-items{background:var(--gris-suave);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+    .pedido-item{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;color:#444;}
+    .pedido-total{display:flex;justify-content:space-between;font-size:14px;font-weight:700;padding-top:8px;margin-top:6px;border-top:1px dashed var(--gris-borde);color:var(--negro);}
+    .pedido-comentarios{font-size:12px;color:#666;font-style:italic;background:#fffbe6;border-left:3px solid var(--amarillo);padding:8px 12px;border-radius:6px;margin-bottom:12px;}
+
+    .pedido-acciones{display:flex;gap:8px;flex-wrap:wrap;}
+    .pedido-acciones button{border:none;border-radius:10px;padding:10px 18px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all 0.2s ease;letter-spacing:0.5px;}
+    .btn-confirmar{background:var(--verde);color:white;}
+    .btn-confirmar:hover{background:#1ebe5b;}
+    .btn-cancelar{background:var(--rojo);color:white;}
+    .btn-cancelar:hover{background:#c82333;}
+    .btn-eliminar{background:transparent;color:#999;border:1.5px solid var(--gris-borde);}
+    .btn-eliminar:hover{background:#f0f0f0;color:var(--rojo);}
+    .pedido-acciones button:disabled{opacity:0.4;cursor:not-allowed;}
+
+    .empty-state{text-align:center;padding:60px 20px;color:#999;font-size:13px;font-style:italic;}
+
+    /* INVENTARIO */
+    .inventario-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+    .inv-card{background:var(--blanco);border:1px solid var(--gris-borde);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;}
+    .inv-img{width:60px;height:60px;border-radius:10px;background:var(--rosa-bebe);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .inv-img img{max-width:80%;max-height:80%;object-fit:contain;}
+    .inv-info{flex:1;min-width:0;}
+    .inv-nombre{font-size:12px;font-weight:500;color:#2b2b2b;margin-bottom:6px;line-height:1.3;}
+    .inv-control{display:flex;align-items:center;gap:8px;}
+    .inv-control button{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--gris-borde);background:var(--blanco);cursor:pointer;font-size:16px;font-weight:600;color:var(--negro);display:flex;align-items:center;justify-content:center;line-height:1;}
+    .inv-control button:hover{background:var(--rosa-bebe);}
+    .inv-stock{font-size:16px;font-weight:700;min-width:32px;text-align:center;color:var(--negro);}
+    .inv-stock.agotado{color:var(--rojo);}
+
+    .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--negro);color:white;padding:14px 24px;border-radius:12px;font-size:13px;font-weight:500;box-shadow:0 10px 30px rgba(0,0,0,0.2);transition:transform 0.4s ease;z-index:2000;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+
+    @media(max-width:640px){
+        .admin-topbar{padding:12px 16px;}
+        .admin-topbar h1{font-size:20px;}
+        .admin-container{padding:16px;}
+        .inventario-grid{grid-template-columns:1fr;}
+    }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-box">
+        <h1>Sabella</h1>
+        <p>Panel de administración</p>
+        <input type="password" id="passInput" placeholder="Contraseña" onkeypress="if(event.key==='Enter')intentarLogin()">
+        <button onclick="intentarLogin()">Entrar</button>
+        <div class="login-error" id="loginError">Contraseña incorrecta</div>
+    </div>
+</div>
+
+<!-- PANEL -->
+<div id="adminPanel" style="display:none;">
+    <div class="admin-topbar">
+        <h1>Sabella <span>Panel de Administración</span></h1>
+        <div class="admin-actions">
+            <button class="admin-btn active" data-tab="pedidos" onclick="cambiarTab('pedidos', event)">Pedidos</button>
+            <button class="admin-btn" data-tab="inventario" onclick="cambiarTab('inventario', event)">Inventario</button>
+            <button class="admin-btn salir" onclick="salir()">Salir</button>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <div class="tab-panel visible" id="tab-pedidos">
+            <div class="section-title">Pedidos pendientes <span class="count" id="countPendientes">0</span></div>
+            <div id="listaPendientes"></div>
+
+            <div class="section-title" style="margin-top:32px;">Historial de confirmados <span class="count" id="countConfirmados">0</span></div>
+            <div id="listaConfirmados"></div>
+
+            <div class="section-title" style="margin-top:32px;">Cancelados <span class="count" id="countCancelados">0</span></div>
+            <div id="listaCancelados"></div>
+        </div>
+
+        <div class="tab-panel" id="tab-inventario">
+            <div class="section-title">Inventario <span class="count" id="countInventario">0 productos</span></div>
+            <div class="inventario-grid" id="inventarioGrid"></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, update, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = { databaseURL: "https://sabella-beauty-default-rtdb.firebaseio.com/" };
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const PASSWORD = "floresMD2004";
+
+const PRODUCTOS = [
+    {id:'l1', cat:'labios', nombre:'E.l.f. Glow Reviver Lip Oil Stick - Loveslick', precio:240, img:'imagenes/elfglowreviverlipoilsticktonolovestick.png'},
+    {id:'l2', cat:'labios', nombre:'E.l.f. Glow Reviver Lip Oil - Rose Envy', precio:270, img:'imagenes/elfglowreviverlipoiltonoroseenvy.png'},
+    {id:'l3', cat:'labios', nombre:'E.l.f. Glow Reviver Lip Oil - Super Neutral', precio:270, img:'imagenes/elfglowreviverlipoiltonosuperneutral.png'},
+    {id:'l4', cat:'labios', nombre:'E.l.f. Cream Glide Lip Liner - Spill The Tea', precio:240, img:'imagenes/elfcreamglideliplinertonospillthetea.png'},
+    {id:'l5', cat:'labios', nombre:'E.l.f. Srsly Satin Lipstick - Creme', precio:170, img:'imagenes/elfsrslysatinlipsticktonocreme.png'},
+    {id:'l6', cat:'labios', nombre:'E.l.f. Srsly Satin Lipstick - Pepper', precio:170, img:'imagenes/elfsrslysatinlipsticktonopepper.png'},
+    {id:'l7', cat:'labios', nombre:"L'Oréal Hyaluron Tint 521", precio:215, img:'imagenes/lorealparishyalurontintlipsatintinttono521.png'},
+    {id:'l8', cat:'labios', nombre:"L'Oréal Hyaluron Tint 601", precio:215, img:'imagenes/lorealparishyalurontintlipsatintinttono601.png'},
+    {id:'l9', cat:'labios', nombre:"L'Oréal Hyaluron Tint 640", precio:215, img:'imagenes/lorealparishyalurontintlipsatintinttono640.png'},
+    {id:'l10', cat:'labios', nombre:"L'Oréal Infallible Laque 635", precio:190, img:'imagenes/lorealparisinfalliblelaqueresistence635.png'},
+    {id:'l11', cat:'labios', nombre:"L'Oréal Infallible Laque 665", precio:190, img:'imagenes/lorealparisinfallibleloqueresistence665.png'},
+    {id:'l12', cat:'labios', nombre:'Maybelline Lifter Glaze - Blue Boba', precio:190, img:'imagenes/maybellinelifterglazetonoblueboba.png'},
+    {id:'l13', cat:'labios', nombre:'Maybelline Lifter Gloss 001', precio:175, img:'imagenes/maybellinelifterglosstono001.png'},
+    {id:'l14', cat:'labios', nombre:'Maybelline Lifter Gloss 021', precio:175, img:'imagenes/maybellinelifterglosstono021.png'},
+    {id:'l15', cat:'labios', nombre:'Maybelline Super Stay Matte Ink 125', precio:190, img:'imagenes/maybellinenewyorksuperstaymatteinkliquidtono125.png'},
+    {id:'l16', cat:'labios', nombre:'Maybelline Serum Lipstick 003 Open Late', precio:165, img:'imagenes/maybellineserumlipsticktono003maybeits.png'},
+    {id:'l17', cat:'labios', nombre:'Maybelline Vinyl Ink 30 Unrivaled', precio:240, img:'imagenes/maybellinesuperstayvinylinktono30unrivaled.png'},
+    {id:'l18', cat:'labios', nombre:'NYX Duck Plump High Pigment 14', precio:210, img:'imagenes/nyxduckplumhighpigmenttono14hallofflame.png'},
+    {id:'l19', cat:'labios', nombre:'NYX I.V. Hydrating Gloss Stain 09', precio:210, img:'imagenes/nyxivhydratingglossstaintono09blushrush.png'},
+    {id:'l20', cat:'labios', nombre:'NYX Professional Lip Liner - Discorage', precio:130, img:'imagenes/nyxprofessionalmakeupliplinertonodiscorage.png'},
+    {id:'l21', cat:'labios', nombre:'NYX Butter Gloss - Orangesicle', precio:170, img:'imagenes/nyxprofessionalmakeupbutterglossnonstickylipglosstonoorangesicle.png'},
+    {id:'l22', cat:'labios', nombre:'NYX Shine Loud - Rebel In Red', precio:230, img:'imagenes/nyxprofessionalmakeupshineloudhighshineliptonorebelinred.png'},
+    {id:'l23', cat:'labios', nombre:'E.l.f. Sheer For It Blush Tint - Orange Crush', precio:175, img:'imagenes/elfsheerforitblushtinttonoorangecrush.png'},
+    {id:'r1', cat:'rostro', nombre:'E.l.f. 16HR Camo Concealer - Fair Beige', precio:220, img:'imagenes/elf16hrcamoconcealertonofairbeige.png'},
+    {id:'r2', cat:'rostro', nombre:'E.l.f. 16HR Camo Concealer - Fair Warm', precio:220, img:'imagenes/elf16hrcamoconcealertonofairwarm.png'},
+    {id:'r3', cat:'rostro', nombre:'E.l.f. 16HR Camo Concealer - Medium Warm', precio:220, img:'imagenes/elf16hrcamoconcealertonomediumwarm.png'},
+    {id:'r4', cat:'rostro', nombre:'E.l.f. Bronzing Drops - Rose Gold', precio:350, img:'imagenes/elfbronzingdropstonorosegold.png'},
+    {id:'r5', cat:'rostro', nombre:'E.l.f. Camo Liquid Blush - Bold-Faced Lilac', precio:230, img:'imagenes/elfcamoliquidblushtonoboldfacedlilac.png'},
+    {id:'r6', cat:'rostro', nombre:'E.l.f. Camo Powder Foundation 375N', precio:300, img:'imagenes/elfcamopowderfoundationtonomedium375n.png'},
+    {id:'r7', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Blush - Magic Hour', precio:280, img:'imagenes/elfhaloglowbeautywandblushtonomagichour.png'},
+    {id:'r8', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Contour - Light/Medium', precio:280, img:'imagenes/elfhaloglowbeautywandcontourtonolightmedium.png'},
+    {id:'r9', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Highlight - Champagne', precio:280, img:'imagenes/elfhaloglowbeautywandhighlightingtonochampagnecampaign.png'},
+    {id:'r10', cat:'rostro', nombre:'E.l.f. Halo Glow Wand Highlight - Rose Quartz', precio:280, img:'imagenes/elfhaloglowbeautywandhighlightertonorosequartz.png'},
+    {id:'r11', cat:'rostro', nombre:'E.l.f. Halo Glow Liquid Filter 01 Fair', precio:430, img:'imagenes/elfhaloglowliquidfiltertono01fairtresclair.png'},
+    {id:'r12', cat:'rostro', nombre:'E.l.f. Liquid Poreless Putty Primer', precio:300, img:'imagenes/elfliquidporelesspputtyprimer.png'},
+    {id:'r13', cat:'rostro', nombre:'E.l.f. Matte Putty Primer', precio:300, img:'imagenes/elfmatteputtyprimer.png'},
+    {id:'r14', cat:'rostro', nombre:'E.l.f. Perfect Finish HD Powder', precio:280, img:'imagenes/elfpefectfinishhdpowder.png'},
+    {id:'r15', cat:'rostro', nombre:'E.l.f. Power Grip Primer', precio:300, img:'imagenes/elfpowergripprimer.png'},
+    {id:'r16', cat:'rostro', nombre:'E.l.f. Power Grip + Niacinamide Mini', precio:215, img:'imagenes/elfpowergripprimer4niacinamidemini.png'},
+    {id:'r18', cat:'rostro', nombre:'E.l.f. Soft Glam Corrector - Cheeky Lychee', precio:160, img:'imagenes/elfsoftglamconcealertonocheekylychee.png'},
+    {id:'r19', cat:'rostro', nombre:'E.l.f. Velvet Finish Face Primer Mini', precio:230, img:'imagenes/elfvelvetfinishfaceprimermini.png'},
+    {id:'r20', cat:'rostro', nombre:"L'Oréal Infallible Concealer 340", precio:270, img:'imagenes/lorealparisinfalliblefullwearconcealertono340.png'},
+    {id:'r21', cat:'rostro', nombre:"L'Oréal Lumi Liquid Blush 610", precio:230, img:'imagenes/lorealparislumiliquidblushtono610dewyrichcoral.png'},
+    {id:'r22', cat:'rostro', nombre:'Maybelline Fit Me! Powder 230', precio:270, img:'imagenes/maybellinefitmematteporelesstono230naturalbuff.png'},
+    {id:'r23', cat:'rostro', nombre:'NYX Stay Matte Foundation', precio:300, img:'imagenes/nyxprofessionalmakeupstaymattebutnotflatpowderfoundation.png'},
+    {id:'o1', cat:'ojos', nombre:'E.l.f. Bite-Size Brow Palette - Taupe', precio:170, img:'imagenes/elfbitesizebrowpalettetonotaupe.png'},
+    {id:'o2', cat:'ojos', nombre:'E.l.f. Brow Lift Gel', precio:190, img:'imagenes/elfbrowlift.png'},
+    {id:'o3', cat:'ojos', nombre:'E.l.f. Incredi-Curl Mascara - Pitch Black', precio:250, img:'imagenes/elfincredicurlmascaratonopitchblack.png'},
+    {id:'o4', cat:'ojos', nombre:'E.l.f. No Budge Cream Shadow - Canyon', precio:170, img:'imagenes/elfnobudgecreameyeshadowcanyontonorosegold.png'},
+    {id:'o5', cat:'ojos', nombre:'E.l.f. No Budge Precision Liner - Black', precio:215, img:'imagenes/elfnobudgeprecisionlinerblack.png'},
+    {id:'o6', cat:'ojos', nombre:'E.l.f. Retractable Eyeliner - Blue', precio:215, img:'imagenes/elfnobudgeretractableeyelinerblue.png'},
+    {id:'o7', cat:'ojos', nombre:'E.l.f. Ultra Precise Brow Pencil - Neutral Brown', precio:190, img:'imagenes/elfultraprecisebrowpenciltononeutralbrown.png'},
+    {id:'o8', cat:'ojos', nombre:'Maybelline Hyper Easy Eyeliner 810', precio:235, img:'imagenes/maybellinehypereasyliquideyelinertono810pitchbrown.png'},
+    {id:'o9', cat:'ojos', nombre:'NYX Blade & Shade Nano Brow - Espresso', precio:220, img:'imagenes/nyxprofessionalmakeupbladeyshadenanobrowpeciltonoespresso.png'},
+    {id:'o10', cat:'ojos', nombre:'NYX Two Timer Dual Eyeliner - Jet Black', precio:250, img:'imagenes/nyxprofessionalmakeuptwotimerdualendedeyelinertonojetblack.png'},
+    {id:'s1', cat:'skincare', nombre:'E.l.f. Holy Hydration! Cleansing Balm', precio:330, img:'imagenes/elfholyhydrationmakeupmeltingcleansingbalm.png'},
+    {id:'s2', cat:'skincare', nombre:'E.l.f. Skin Whoa Glow SPF 30', precio:410, img:'imagenes/elfskinwhoaglowspf30.png'},
+    {id:'s3', cat:'skincare', nombre:'Starface Hydro-Star 32 pz Amarillos', precio:360, img:'imagenes/Starfacehydrostarpimplepatches32patchesamarillos.png'},
+    {id:'s4', cat:'skincare', nombre:'Starface Hydro-Star Extra Cute 48 pz', precio:300, img:'imagenes/Starfacehydrostarpimplepatchesextrasmall48piezas6colores.png'},
+    {id:'h1', cat:'herramientas', nombre:'E.l.f. Mechanical Eyelash Curler', precio:180, img:'imagenes/elfmechanicaleyelashcurler.png'},
+    {id:'h2', cat:'herramientas', nombre:'E.l.f. Makeup Mist & Set', precio:220, img:'imagenes/elfmakeupmistyset.png'},
+    {id:'h3', cat:'herramientas', nombre:'E.l.f. Power Grip Dewy Spray', precio:315, img:'imagenes/elfpowergripdewysettingspray.png'},
+    {id:'h4', cat:'herramientas', nombre:'E.l.f. Safe Travels Sponge Case', precio:135, img:'imagenes/elfsafetravelssponge.png'},
+    {id:'h5', cat:'herramientas', nombre:'E.l.f. Stay All Night Setting Mist', precio:315, img:'imagenes/elfstayallnightmicrofinesettingmist.png'},
+    {id:'h6', cat:'herramientas', nombre:'E.l.f. Total Face Brush', precio:135, img:'imagenes/elftotalfacebrush.png'},
+    {id:'h7', cat:'herramientas', nombre:'NYX Matte Finish Setting Spray', precio:190, img:'imagenes/nyxprofessionalmakeupmattefinishmakeupsettingspray.png'}
+];
+
+let stock = {};
+let pedidos = {};
+
+// LOGIN
+window.intentarLogin = function(){
+    const pass = document.getElementById('passInput').value;
+    if(pass === PASSWORD){
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPanel').style.display = 'block';
+        sessionStorage.setItem('sabella_admin', 'ok');
+        iniciarEscucha();
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+    }
+};
+
+window.salir = function(){
+    sessionStorage.removeItem('sabella_admin');
+    location.reload();
+};
+
+// Si ya está logueado
+if(sessionStorage.getItem('sabella_admin') === 'ok'){
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminPanel').style.display = 'block';
+    iniciarEscucha();
+}
+
+function iniciarEscucha(){
+    onValue(ref(db, 'stock'), snap => {
+        stock = snap.val() || {};
+        renderInventario();
+    });
+    onValue(ref(db, 'pedidos'), snap => {
+        pedidos = snap.val() || {};
+        renderPedidos();
+    });
+}
+
+function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+/* ============================
+   PEDIDOS
+============================ */
+function renderPedidos(){
+    const pendientes = [];
+    const confirmados = [];
+    const cancelados = [];
+
+    Object.keys(pedidos).forEach(k=>{
+        const p = {...pedidos[k], _key: k};
+        if(p.estado === 'pendiente') pendientes.push(p);
+        else if(p.estado === 'confirmado') confirmados.push(p);
+        else if(p.estado === 'cancelado') cancelados.push(p);
+    });
+
+    pendientes.sort((a,b)=> new Date(b.fecha) - new Date(a.fecha));
+    confirmados.sort((a,b)=> new Date(b.fecha) - new Date(a.fecha));
+    cancelados.sort((a,b)=> new Date(b.fecha) - new Date(a.fecha));
+
+    document.getElementById('countPendientes').textContent = pendientes.length;
+    document.getElementById('countConfirmados').textContent = confirmados.length;
+    document.getElementById('countCancelados').textContent = cancelados.length;
+
+    document.getElementById('listaPendientes').innerHTML = pendientes.length === 0 
+        ? '<div class="empty-state">No hay pedidos pendientes</div>'
+        : pendientes.map(p => renderPedidoCard(p, 'pendiente')).join('');
+    
+    document.getElementById('listaConfirmados').innerHTML = confirmados.length === 0
+        ? '<div class="empty-state">Sin pedidos confirmados</div>'
+        : confirmados.map(p => renderPedidoCard(p, 'confirmado')).join('');
+
+    document.getElementById('listaCancelados').innerHTML = cancelados.length === 0
+        ? '<div class="empty-state">Sin pedidos cancelados</div>'
+        : cancelados.map(p => renderPedidoCard(p, 'cancelado')).join('');
+}
+
+function renderPedidoCard(p, tipo){
+    const fecha = new Date(p.fecha);
+    const fechaStr = fecha.toLocaleDateString('es-MX', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
+    const itemsHTML = p.items.map(it=>`<div class="pedido-item"><span>${it.nombre} (x${it.cantidad})</span><span>$${it.precio * it.cantidad}</span></div>`).join('');
+    const comentariosHTML = p.comentarios ? `<div class="pedido-comentarios">"${p.comentarios}"</div>` : '';
+    
+    let accionesHTML = '';
+    if(tipo === 'pendiente'){
+        accionesHTML = `
+            <div class="pedido-acciones">
+                <button class="btn-confirmar" onclick="confirmarPedido('${p._key}')">Confirmar venta</button>
+                <button class="btn-cancelar" onclick="cancelarPedido('${p._key}')">Cancelar</button>
+                <button class="btn-eliminar" onclick="eliminarPedido('${p._key}')">Eliminar</button>
+            </div>
+        `;
+    } else {
+        accionesHTML = `
+            <div class="pedido-acciones">
+                <button class="btn-eliminar" onclick="eliminarPedido('${p._key}')">Eliminar del historial</button>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="pedido-card">
+            <div class="pedido-header">
+                <div class="pedido-info">
+                    <div class="pedido-nombre">${p.nombre}</div>
+                    <div class="pedido-contacto">Celular: <a href="https://wa.me/${p.celular.replace(/\D/g,'')}" target="_blank">${p.celular}</a></div>
+                    <div class="pedido-fecha">${fechaStr}</div>
+                </div>
+                <div class="pedido-estado estado-${tipo}">${tipo}</div>
+            </div>
+            <div class="pedido-items">
+                ${itemsHTML}
+                <div class="pedido-total"><span>TOTAL</span><span>$${p.total}</span></div>
+            </div>
+            ${comentariosHTML}
+            ${accionesHTML}
+        </div>
+    `;
+}
+
+window.confirmarPedido = async function(key){
+    if(!confirm('¿Confirmar esta venta? Se descontará el stock automáticamente.')) return;
+    const p = pedidos[key];
+    if(!p) return;
+
+    try {
+        // Descontar stock de cada item
+        for(const it of p.items){
+            const stockRef = ref(db, 'stock/' + it.id);
+            await runTransaction(stockRef, (current) => {
+                if(current === null || current === undefined) return 0;
+                return Math.max(0, current - it.cantidad);
+            });
+        }
+        // Marcar pedido como confirmado
+        await update(ref(db, 'pedidos/' + key), { estado: 'confirmado', fechaConfirmacion: new Date().toISOString() });
+        toast('Venta confirmada. Stock actualizado.');
+    } catch(err) {
+        console.error(err);
+        toast('Error al confirmar la venta.');
+    }
+};
+
+window.cancelarPedido = async function(key){
+    if(!confirm('¿Cancelar este pedido?')) return;
+    try {
+        await update(ref(db, 'pedidos/' + key), { estado: 'cancelado', fechaCancelacion: new Date().toISOString() });
+        toast('Pedido cancelado.');
+    } catch(err) {
+        console.error(err);
+        toast('Error al cancelar.');
+    }
+};
+
+window.eliminarPedido = async function(key){
+    if(!confirm('¿Eliminar este pedido del historial?')) return;
+    try {
+        await remove(ref(db, 'pedidos/' + key));
+        toast('Pedido eliminado.');
+    } catch(err) {
+        console.error(err);
+        toast('Error al eliminar.');
+    }
+};
+
+/* ============================
+   INVENTARIO
+============================ */
+function renderInventario(){
+    const grid = document.getElementById('inventarioGrid');
+    document.getElementById('countInventario').textContent = PRODUCTOS.length + ' productos';
+    
+    grid.innerHTML = PRODUCTOS.map(p => {
+        const s = stock[p.id] !== undefined ? stock[p.id] : 0;
+        const agotadoClass = s === 0 ? 'agotado' : '';
+        return `
+            <div class="inv-card">
+                <div class="inv-img"><img src="${p.img}" alt=""></div>
+                <div class="inv-info">
+                    <div class="inv-nombre">${p.nombre}</div>
+                    <div class="inv-control">
+                        <button onclick="cambiarStock('${p.id}', -1)">−</button>
+                        <span class="inv-stock ${agotadoClass}">${s}</span>
+                        <button onclick="cambiarStock('${p.id}', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+window.cambiarStock = async function(id, delta){
+    const stockRef = ref(db, 'stock/' + id);
+    try {
+        await runTransaction(stockRef, (current) => {
+            const val = (current === null || current === undefined) ? 0 : current;
+            return Math.max(0, val + delta);
+        });
+        toast('Stock actualizado');
+    } catch(err) {
+        console.error(err);
+        toast('Error al actualizar stock');
+    }
+};
+
+/* ============================
+   TABS
+============================ */
+window.cambiarTab = function(tab, event){
+    document.querySelectorAll('.admin-btn[data-tab]').forEach(b=>b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('visible'));
+    document.getElementById('tab-' + tab).classList.add('visible');
+};
+</script>
+</body>
+</html>
